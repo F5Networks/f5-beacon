@@ -130,17 +130,47 @@ class HttpApi(HttpApiBase):
         except ValueError:
             raise ConnectionError('Invalid JSON response: %s' % response_text)
 
-    def delete(self, url, **kwargs):
+    def delete(self, url, account_id=None, **kwargs):
+        if account_id:
+            headers = {
+                {'X-F5aaS-Preferred-Account-Id': account_id}
+            }
+            headers.update(BASE_HEADERS)
+            return self.send_request(url, method='GET', headers=headers, **kwargs)
         return self.send_request(url, method='DELETE', **kwargs)
 
-    def get(self, url, **kwargs):
-        return self.send_request(url, method='GET', **kwargs)
+    def get(self, url, account_id=None, **kwargs):
+        if account_id:
+            headers = {
+                {'X-F5aaS-Preferred-Account-Id': account_id}
+            }
+            headers.update(BASE_HEADERS)
+            return self.send_request(url, method='GET', headers=headers, **kwargs)
+        return self.send_request(url, method='GET', headers=BASE_HEADERS, **kwargs)
 
-    def patch(self, url, data=None, **kwargs):
+    def patch(self, url, data=None, account_id=None, **kwargs):
+        if account_id:
+            headers = {
+                {'X-F5aaS-Preferred-Account-Id': account_id}
+            }
+            headers.update(BASE_HEADERS)
+            return self.send_request(url, method='GET', headers=headers, **kwargs)
         return self.send_request(url, method='PATCH', data=data, headers=BASE_HEADERS, **kwargs)
 
-    def post(self, url, data=None, **kwargs):
+    def post(self, url, data=None, account_id=None, **kwargs):
+        if account_id:
+            headers = {
+                {'X-F5aaS-Preferred-Account-Id': account_id}
+            }
+            headers.update(BASE_HEADERS)
+            return self.send_request(url, method='GET', headers=headers, **kwargs)
         return self.send_request(url, method='POST', data=data, headers=BASE_HEADERS, **kwargs)
 
-    def put(self, url, data=None, **kwargs):
+    def put(self, url, data=None, account_id=None, **kwargs):
+        if account_id:
+            headers = {
+                {'X-F5aaS-Preferred-Account-Id': account_id}
+            }
+            headers.update(BASE_HEADERS)
+            return self.send_request(url, method='GET', headers=headers, **kwargs)
         return self.send_request(url, method='PUT', data=data, headers=BASE_HEADERS, **kwargs)

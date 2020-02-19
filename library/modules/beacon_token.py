@@ -29,21 +29,34 @@ options:
     description:
       - User created token description.
     type: str
+  preferred_account_id:
+    description:
+      - If the F5 Cloud Services user is associated with multiple accounts or have configured divisions, then
+        C(preferred_account_id) is required to disambiguate the account information. Not providing the parameter in such
+        instances will lead to unexpected behavior which will result in incomplete resources.
+    type: str
 author:
   - Wojciech Wypior (@wojtek0806)
 '''
 
 EXAMPLES = r'''
 - name: Create Beacon Token with description
-  beacon_tokens:
+  beacon_token:
     name: "foobar"
     description: "Created by Ansible tool"
     state: present
 
 - name: Delete Beacon Token
-  beacon_tokens:
+  beacon_token:
     name: "foobar"
     state: absent
+    
+- name: Create Beacon Token with description, preferred account provided
+  beacon_token:
+    name: "foobar"
+    description: "Created by Ansible tool"
+    preferred_account_id: "a-aaSXXdAYYY2"
+    state: present
 '''
 
 RETURN = r'''
@@ -56,7 +69,7 @@ description:
   description: The new description of the token.
   returned: changed
   type: str
-  sample: My Token
+  sample: "My Token"
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -66,8 +79,8 @@ try:
     from library.module_utils.common import AnsibleF5Parameters
     from library.module_utils.common import F5CollectionError
 except ImportError:
-    from ansible_collections.f5networks.f5_beacon.plugins.module_utils import AnsibleF5Parameters
-    from ansible_collections.f5networks.f5_beacon.plugins.module_utils import F5CollectionError
+    from ansible_collections.f5networks.f5_beacon.plugins.module_utils.common import AnsibleF5Parameters
+    from ansible_collections.f5networks.f5_beacon.plugins.module_utils.common import F5CollectionError
 
 
 class Parameters(AnsibleF5Parameters):
@@ -205,7 +218,7 @@ class ModuleManager(object):
         return True
 
     def exists(self):
-        response = self.client.get(self.url + '/' + self.want.name)
+        response = self.client.get(self.url + '/' + self.want.name, account_id=self.want.preferred_account_id)
         if response['code'] == 404:
             return False
         elif response['code'] == 200:
@@ -215,14 +228,14 @@ class ModuleManager(object):
 
     def create_on_device(self):
         params = self.changes.api_params()
-        response = self.client.post(self.url, data=params)
+        response = self.client.post(self.url, data=params, account_id=self.want.preferred_account_id)
         if response['code'] == 200:
             return True
         else:
             raise F5CollectionError(response['code'], response['contents'])
 
     def remove_from_device(self):
-        response = self.client.delete(self.url + '/' + self.want.name)
+        response = self.client.delete(self.url + '/' + self.want.name, account_id=self.want.preferred_account_id)
         if response['code'] == 200:
             return True
         else:
@@ -235,6 +248,7 @@ class ArgumentSpec(object):
         argument_spec = dict(
             name=dict(required=True),
             description=dict(),
+            preferred_account_id=dict(no_log=True),
             state=dict(
                 default='present',
                 choices=['present', 'absent']
