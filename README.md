@@ -1,0 +1,1 @@
+This is an incubator for the upcoming beacon collection, structure and scope might change without notice.
