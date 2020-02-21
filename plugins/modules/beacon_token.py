@@ -29,12 +29,7 @@ options:
     description:
       - User created token description.
     type: str
-  preferred_account_id:
-    description:
-      - If the F5 Cloud Services user is associated with multiple accounts or have configured divisions, then
-        C(preferred_account_id) is required to disambiguate the account information. Not providing the parameter in such
-        instances will lead to unexpected behavior which will result in incomplete resources.
-    type: str
+extends_documentation_fragment: f5networks.f5_beacon.f5cs
 author:
   - Wojciech Wypior (@wojtek0806)
 '''
@@ -76,8 +71,8 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.connection import Connection
 
 try:
-    from library.module_utils.common import AnsibleF5Parameters
-    from library.module_utils.common import F5CollectionError
+    from plugins.module_utils.common import AnsibleF5Parameters
+    from plugins.module_utils.common import F5CollectionError
 except ImportError:
     from ansible_collections.f5networks.f5_beacon.plugins.module_utils.common import AnsibleF5Parameters
     from ansible_collections.f5networks.f5_beacon.plugins.module_utils.common import F5CollectionError

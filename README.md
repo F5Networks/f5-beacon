@@ -1,1 +1,3 @@
-This is an incubator for the upcoming beacon collection, structure and scope might change without notice.
+# Ansible Collection - f5networks.f5_beacon
+
+Documentation for the collection.

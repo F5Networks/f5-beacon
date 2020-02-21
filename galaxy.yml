@@ -1,0 +1,17 @@
+namespace: f5networks
+name: f5_beacon
+version: 1.0.0
+readme: README.md
+authors:
+  - Wojciech Wypior (@wojtek0806)
+description: Collection to manage F5 Beacon objects
+license: GPL-3.0-only
+tags:
+  - f5
+  - cloud
+  - beacon
+dependencies: {}
+repository: http://example.com/repository
+documentation: http://docs.example.com
+homepage: http://example.com
+issues: http://example.com/issue/tracker
