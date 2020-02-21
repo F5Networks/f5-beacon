@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include f5_beacon"
+      include_role:
+        name: "f5_beacon"
