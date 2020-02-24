@@ -1,0 +1,53 @@
+{
+  "sources": [
+    {
+      "name": "f5vm01.eastus.cloudapp.azure.com",
+      "type": "bigip-system",
+      "lastFeedTime": "2020-02-27T15:49:48Z",
+      "tokenName": "BIGIP Azure"
+    },
+    {
+      "name": "ip-10-0-0-105.ap-southeast-1.compute.internal",
+      "type": "bigip-system",
+      "lastFeedTime": "2020-02-27T15:43:16Z",
+      "tokenName": "Shahn_BIGIP"
+    },
+    {
+      "name": "bit1003.lab5.defenselabs.net",
+      "type": "bigip-system",
+      "lastFeedTime": "2020-02-27T15:42:19Z",
+      "tokenName": "SilverLine_BigIP_Token"
+    },
+    {
+      "name": "bit3.lab5.defense.net",
+      "type": "bigip-system",
+      "lastFeedTime": "2020-02-27T15:49:33Z",
+      "tokenName": "SilverLine_BigIP_Token"
+    },
+    {
+      "name": "waf3nic.openstack.grubernet.org",
+      "type": "bigip-system",
+      "lastFeedTime": "2020-02-20T18:01:24Z",
+      "tokenName": "tmos_cloudinit_demo"
+    },
+    {
+      "name": "waf4nic.openstack.grubernet.org",
+      "type": "bigip-system",
+      "lastFeedTime": "2020-02-20T18:06:41Z",
+      "tokenName": "tmos_cloudinit_demo"
+    },
+    {
+      "name": "NicoM-BeaconDemo-ubuntu-NGINX-az1-01",
+      "type": "system",
+      "lastFeedTime": "2020-01-23T08:44:50Z",
+      "tokenName": ""
+    },
+    {
+      "name": "NicoM-BeaconDemo-ubuntu-NGINX-az2-01",
+      "type": "system",
+      "lastFeedTime": "2020-01-23T10:13:10Z",
+      "tokenName": ""
+    }
+  ],
+  "nextPageToken": ""
+}

@@ -30,7 +30,11 @@ options:
     required: True
     choices:
       - all
+      - tokens
+      - sources
       - "!all"
+      - "!tokens"
+      - "!sources"
     aliases: ['include']
 extends_documentation_fragment: f5networks.f5_beacon.f5cs
 author:
@@ -38,29 +42,90 @@ author:
 '''
 
 EXAMPLES = r'''
-- name: Create Beacon Token with description
-  beacon_token:
-    name: "foobar"
-    description: "Created by Ansible tool"
-    state: present
+- name: Collect Beacon information
+  beacon_info:
+    gather_subset:
+      - tokens
+      - sources
 
-- name: Delete Beacon Token
-  beacon_token:
-    name: "foobar"
-    state: absent
+- name: Collect all Beacon information
+  beacon_info:
+    gather_subset:
+      - all
+
+- name: Collect all Beacon information except sources
+  beacon_info:
+    gather_subset:
+      - all
+      - "!sources"
 '''
 
 RETURN = r'''
-name:
-  description: The name of the created token.
-  returned: changed
-  type: str
-  sample: Token_foo
-description:
-  description: The new description of the token.
-  returned: changed
-  type: str
-  sample: "My Token"
+sources:
+  description: List of Beacon sources information.
+  returned: When C(sources) is specified in C(gather_subset).
+  type: complex
+  contains:
+    name:
+      description:
+        - Placeholder text.
+      returned: queried
+      type: str
+      sample: bit3.lab5.defense.net
+    type:
+      description:
+        - Placeholder text.
+      returned: queried
+      type: str
+      sample: bigip-system
+    token_name:
+      description:
+        - Placeholder text.
+      returned: queried
+      type: str
+      sample: "foo_token"
+    last_feed_time:
+      description:
+        - Placeholder text.
+      returned: queried
+      type: str
+      sample: "2020-02-20T18:06:41Z"
+  sample: hash/dictionary of values
+tokens:
+  description: List of Beacon tokens information.
+  returned: When C(tokens) is specified in C(gather_subset).
+  type: complex
+  contains:
+    name:
+      description:
+        - Name of the token generated. 
+      returned: queried
+      type: str
+      sample: foo_token
+    description:
+      description:
+        - User defined description of the token.
+      returned: queried
+      type: str
+      sample: "This is a test
+    access_token:
+      description:
+        - The value of the token that has been created.
+      type: str
+      returned: queried
+      sample: "a-aLnq7vd1S#GlHenr1Ibe7S3cC6WtUQz5t1bdgcDDo7T6Zs5f71mAc="
+    source_count:
+      description:
+        - Placeholder text.
+      returned: queried
+      type: int
+      sample: 2
+    create_time:
+      descripton:
+        - Placeholder text.
+      returned: queried
+      sample: "2020-02-12T13:30:44.272728Z"
+  sample: hash/dictionary of values      
 '''
 
 
@@ -75,21 +140,6 @@ try:
 except ImportError:
     from ansible_collections.f5networks.f5_beacon.plugins.module_utils.common import AnsibleF5Parameters
     from ansible_collections.f5networks.f5_beacon.plugins.module_utils.common import F5CollectionError
-
-
-class BaseManager(object):
-    def __init__(self, *args, **kwargs):
-        self.module = kwargs.get('module', None)
-        self.client = kwargs.get('client', None)
-        self.kwargs = kwargs
-
-    def exec_module(self):
-        results = []
-        facts = self.read_facts()
-        for item in facts:
-            attrs = item.to_return()
-            results.append(attrs)
-        return results
 
 
 class Parameters(AnsibleF5Parameters):
@@ -115,6 +165,38 @@ class BaseParameters(Parameters):
             result[returnable] = getattr(self, returnable)
         result = self._filter_params(result)
         return result
+
+
+class BaseManager(object):
+    def __init__(self, *args, **kwargs):
+        self.module = kwargs.get('module', None)
+        self.client = kwargs.get('client', None)
+        self.kwargs = kwargs
+        self.preferred_account_id = kwargs.get('preferred_account_id', None)
+
+    def exec_module(self):
+        results = []
+        facts = self.read_facts()
+        for item in facts:
+            attrs = item.to_return()
+            results.append(attrs)
+        return results
+
+
+class TokenParameters(BaseParameters):
+    api_map = {
+        'createTime': 'create_time',
+        'accessToken': 'access_token',
+        'sourceCount': 'source_count',
+    }
+
+    returnables = [
+        'name',
+        'description',
+        'access_token',
+        'source_count',
+        'create_time'
+    ]
 
 
 class TokenManager(BaseManager):
@@ -148,28 +230,26 @@ class TokenManager(BaseManager):
 
     def read_collection_from_device(self):
         uri = '/beacon/v1/telemetry-token'
-        response = self.client.get(uri)
+        response = self.client.get(uri, account_id=self.preferred_account_id)
         if response['code'] != 200:
             raise F5CollectionError(response['contents'])
         if 'tokens' not in response['contents'] or len(response['contents']['tokens']) == 0:
             return []
-        result = response['tokens']
+        result = response['contents']['tokens']
         return result
 
 
-class TokenParameters(BaseParameters):
+class SourcesParameters(BaseParameters):
     api_map = {
-        'createTime': 'create_time',
-        'accessToken': 'access_token',
-        'sourceCount': 'source_count',
+        'lastFeedTime': 'last_feed_time',
+        'tokenName': 'token_name'
     }
 
     returnables = [
         'name',
-        'description',
-        'access_token',
-        'source_count',
-        'create_time'
+        'type',
+        'last_feed_time',
+        'token_name',
     ]
 
 
@@ -178,7 +258,7 @@ class SourcesManager(BaseManager):
         self.client = kwargs.get('client', None)
         self.module = kwargs.get('module', None)
         super(SourcesManager, self).__init__(**kwargs)
-        self.want = SourcesManager(params=self.module.params)
+        self.want = SourcesParameters(params=self.module.params)
 
     def exec_module(self):
         facts = self._exec_module()
@@ -198,39 +278,19 @@ class SourcesManager(BaseManager):
         results = []
         collection = self.read_collection_from_device()
         for resource in collection:
-            params = TokenParameters(params=resource)
+            params = SourcesParameters(params=resource)
             results.append(params)
         return results
 
     def read_collection_from_device(self):
         uri = '/beacon/v1/sources'
-        response = self.client.get(uri)
+        response = self.client.get(uri, account_id=self.preferred_account_id)
         if response['code'] != 200:
             raise F5CollectionError(response['contents'])
-        if 'tokens' not in response['contents'] or len(response['contents']['sources']) == 0:
+        if 'sources' not in response['contents'] or len(response['contents']['sources']) == 0:
             return []
-        result = response['sources']
+        result = response['contents']['sources']
         return result
-
-
-class SourcesParameters(BaseParameters):
-    api_map = {
-        'createTime': 'create_time',
-        'lastFeedTime': 'last_feed_time',
-        'updateTime': 'update_time',
-        'tokenName': 'token_name'
-    }
-
-    returnables = [
-        "id",
-        'name',
-        'description',
-        'type',
-        'last_feed_time',
-        'create_time',
-        'update_time',
-        'token_name',
-    ]
 
 
 class ModuleManager(object):

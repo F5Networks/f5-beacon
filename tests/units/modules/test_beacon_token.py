@@ -9,7 +9,7 @@ __metaclass__ = type
 import os
 import json
 
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 from unittest import TestCase
 
 from ansible.module_utils.basic import AnsibleModule
@@ -79,3 +79,8 @@ class TestManager(TestCase):
         mm = ModuleManager(module=module)
         mm.exists = Mock(return_value=False)
         mm.create_on_device = Mock(return_value=True)
+
+        results = mm.exec_module()
+        assert results['changed'] is True
+        assert results['name'] == 'foo'
+        assert results['description'] == 'token by ansible'

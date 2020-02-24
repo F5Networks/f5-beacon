@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright: (c) 2019, F5 Networks Inc.
+# Copyright: (c) 2020, F5 Networks Inc.
 # GNU General Public License v3.0 (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -46,21 +46,22 @@ class HttpApi(HttpApiBase):
         self.token_timeout = None
 
     def login(self, username, password):
-        payload = {
-            'username': username,
-            'password': password
-            }
-
-        response = self.send_request(LOGIN_URL, method='POST', data=payload, headers=BASE_HEADERS)
+        if username and password:
+            payload = {
+                'username': username,
+                'password': password
+                }
+            response = self.send_request(LOGIN_URL, method='POST', data=payload, headers=BASE_HEADERS)
+        else:
+            raise AnsibleConnectionFailure('Username and password are required for login.')
 
         try:
             self.refresh_token = response['contents']['refresh_token']
             self.access_token = response['contents']['access_token']
             self.token_timeout = int(response['contents']['expires_at'])
-            self.connection._auth = {'Authorization': 'Bearer %s' % self.access_token}
+            self.connection._auth = {'Authorization': 'Bearer {0}'.format(self.access_token)}
         except KeyError:
-            raise ConnectionError(
-                'Server returned response without token info during connection authentication: %s' % response)
+            raise ConnectionError('Server returned invalid response during connection authentication.')
 
     def update_auth(self, response, response_text):
         """We never update token per request, we will utilize token timeouts for that instead at some point,
@@ -79,14 +80,13 @@ class HttpApi(HttpApiBase):
             self.access_token = response['contents']['access_token']
             self.connection._auth = {'Authorization': 'Bearer %s' % self.access_token}
         except KeyError:
-            raise ConnectionError(
-                'Server returned response without token info during token refresh operation: %s' % response)
+            raise ConnectionError('Server returned invalid response during connection authentication.')
 
     def logout(self):
         if not self.connection._auth:
             return
         if not self.access_token:
-            raise AnsibleConnectionFailure("Access token not found, could not perform logout operation.")
+            raise AnsibleConnectionFailure('Access token not found, could not perform logout operation.')
 
         payload = {
             'access_token': self.access_token
@@ -132,45 +132,35 @@ class HttpApi(HttpApiBase):
 
     def delete(self, url, account_id=None, **kwargs):
         if account_id:
-            headers = {
-                {'X-F5aaS-Preferred-Account-Id': account_id}
-            }
+            headers = {'X-F5aaS-Preferred-Account-Id': account_id}
             headers.update(BASE_HEADERS)
-            return self.send_request(url, method='GET', headers=headers, **kwargs)
+            return self.send_request(url, method='DELETE', headers=headers, **kwargs)
         return self.send_request(url, method='DELETE', **kwargs)
 
     def get(self, url, account_id=None, **kwargs):
         if account_id:
-            headers = {
-                {'X-F5aaS-Preferred-Account-Id': account_id}
-            }
+            headers = {'X-F5aaS-Preferred-Account-Id': account_id}
             headers.update(BASE_HEADERS)
             return self.send_request(url, method='GET', headers=headers, **kwargs)
         return self.send_request(url, method='GET', headers=BASE_HEADERS, **kwargs)
 
     def patch(self, url, data=None, account_id=None, **kwargs):
         if account_id:
-            headers = {
-                {'X-F5aaS-Preferred-Account-Id': account_id}
-            }
+            headers = {'X-F5aaS-Preferred-Account-Id': account_id}
             headers.update(BASE_HEADERS)
-            return self.send_request(url, method='GET', headers=headers, **kwargs)
+            return self.send_request(url, method='PATCH', headers=headers, **kwargs)
         return self.send_request(url, method='PATCH', data=data, headers=BASE_HEADERS, **kwargs)
 
     def post(self, url, data=None, account_id=None, **kwargs):
         if account_id:
-            headers = {
-                {'X-F5aaS-Preferred-Account-Id': account_id}
-            }
+            headers = {'X-F5aaS-Preferred-Account-Id': account_id}
             headers.update(BASE_HEADERS)
-            return self.send_request(url, method='GET', headers=headers, **kwargs)
+            return self.send_request(url, method='POST', headers=headers, **kwargs)
         return self.send_request(url, method='POST', data=data, headers=BASE_HEADERS, **kwargs)
 
     def put(self, url, data=None, account_id=None, **kwargs):
         if account_id:
-            headers = {
-                {'X-F5aaS-Preferred-Account-Id': account_id}
-            }
+            headers = {'X-F5aaS-Preferred-Account-Id': account_id}
             headers.update(BASE_HEADERS)
-            return self.send_request(url, method='GET', headers=headers, **kwargs)
+            return self.send_request(url, method='PUT', headers=headers, **kwargs)
         return self.send_request(url, method='PUT', data=data, headers=BASE_HEADERS, **kwargs)
