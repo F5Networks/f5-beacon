@@ -17,11 +17,11 @@ from ansible.module_utils.six.moves.urllib.error import HTTPError
 from ansible.module_utils.six import BytesIO, StringIO
 
 try:
-    from plugins.httpapi.f5_cs import HttpApi
-    from plugins.httpapi.f5_cs import BASE_HEADERS
+    from plugins.httpapi.f5 import HttpApi
+    from plugins.httpapi.f5 import BASE_HEADERS
 except ImportError:
-    from ansible_collections.f5networks.f5_beacon.plugins.httpapi.f5_cs import HttpApi
-    from ansible_collections.f5networks.f5_beacon.plugins.httpapi.f5_cs import BASE_HEADERS
+    from ansible_collections.f5networks.f5_beacon.plugins.httpapi.f5 import HttpApi
+    from ansible_collections.f5networks.f5_beacon.plugins.httpapi.f5 import BASE_HEADERS
 
 
 class TestF5CloudServicesHttpApi(TestCase):

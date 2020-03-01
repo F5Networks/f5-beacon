@@ -15,7 +15,7 @@ from ansible.module_utils.basic import AnsibleModule
 
 
 try:
-    from plugins.httpapi.f5_cs import HttpApi
+    from plugins.httpapi.f5 import HttpApi
     from plugins.modules.beacon_info import TokenManager
     from plugins.modules.beacon_info import SourcesManager
     from plugins.modules.beacon_info import Parameters
@@ -24,7 +24,7 @@ try:
     from tests.units.common.utils import set_module_args
     from tests.units.common.utils import connection_response
 except ImportError:
-    from ansible_collections.f5networks.f5_beacon.plugins.httpapi.f5_cs import HttpApi
+    from ansible_collections.f5networks.f5_beacon.plugins.httpapi.f5 import HttpApi
     from ansible_collections.f5networks.f5_beacon.plugins.modules.beacon_info import TokenManager
     from ansible_collections.f5networks.f5_beacon.plugins.modules.beacon_info import SourcesManager
     from ansible_collections.f5networks.f5_beacon.plugins.modules.beacon_info import Parameters
