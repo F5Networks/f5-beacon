@@ -10,6 +10,7 @@ vault.txt
 **.cache/
 cache/
 assets/
+build/
 
 # Byte-compiled files
 __pycache__/
@@ -25,9 +26,6 @@ docs/_modules/*_module.rst
 devtools/docker-compose.site.yaml
 
 # intergration test files
-test/integration/inventory/hosts
-test/integration/inventory/group_vars/all.yaml
-./ansible/
 tmp/*
 !tmp/.gitkeep
 !tmp/licenses

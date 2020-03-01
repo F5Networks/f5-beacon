@@ -10,7 +10,7 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 author: Wojciech Wypior <w.wypior@f5.com>
-httpapi : f5_cs
+httpapi : f5
 short_description: HttpApi Plugin for F5 Cloud Services
 description:
   - This HttpApi plugin provides methods to connect to F5 Cloud Services over a HTTP(S)-based api.

@@ -42,22 +42,34 @@ author:
 '''
 
 EXAMPLES = r'''
-- name: Collect Beacon information
-  beacon_info:
-    gather_subset:
-      - tokens
-      - sources
+- hosts: all
+  collections:
+    - f5networks.f5_beacon
+  connection: httpapi
 
-- name: Collect all Beacon information
-  beacon_info:
-    gather_subset:
-      - all
-
-- name: Collect all Beacon information except sources
-  beacon_info:
-    gather_subset:
-      - all
-      - "!sources"
+  vars:
+    ansible_user: "foo@fakemail.net"
+    ansible_httpapi_password: "password"
+    ansible_network_os: f5networks.f5_beacon.f5
+    ansible_httpapi_use_ssl: yes
+  
+  tasks:
+    - name: Collect Beacon information
+      beacon_info:
+        gather_subset:
+          - tokens
+          - sources
+    
+    - name: Collect all Beacon information
+      beacon_info:
+        gather_subset:
+          - all
+    
+    - name: Collect all Beacon information except sources
+      beacon_info:
+        gather_subset:
+          - all
+          - "!sources"
 '''
 
 RETURN = r'''

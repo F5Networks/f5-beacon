@@ -35,23 +35,35 @@ author:
 '''
 
 EXAMPLES = r'''
-- name: Create Beacon Token with description
-  beacon_token:
-    name: "foobar"
-    description: "Created by Ansible tool"
-    state: present
+- hosts: all
+  collections:
+    - f5networks.f5_beacon
+  connection: httpapi
 
-- name: Delete Beacon Token
-  beacon_token:
-    name: "foobar"
-    state: absent
+  vars:
+    ansible_user: "foo@fakemail.net"
+    ansible_httpapi_password: "password"
+    ansible_network_os: f5networks.f5_beacon.f5
+    ansible_httpapi_use_ssl: yes
+  
+  tasks:
+    - name: Create Beacon Token with description
+      beacon_token:
+        name: "foobar"
+        description: "Created by Ansible tool"
+        state: present
     
-- name: Create Beacon Token with description, preferred account provided
-  beacon_token:
-    name: "foobar"
-    description: "Created by Ansible tool"
-    preferred_account_id: "a-aaSXXdAYYY2"
-    state: present
+    - name: Delete Beacon Token
+      beacon_token:
+        name: "foobar"
+        state: absent
+        
+    - name: Create Beacon Token with description, preferred account provided
+      beacon_token:
+        name: "foobar"
+        description: "Created by Ansible tool"
+        preferred_account_id: "a-aaSXXdAYYY2"
+        state: present
 '''
 
 RETURN = r'''
