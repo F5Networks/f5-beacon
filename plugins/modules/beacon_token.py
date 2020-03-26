@@ -41,6 +41,7 @@ EXAMPLES = r'''
   connection: httpapi
 
   vars:
+    ansible_host: "api.cloudservices.f5.com"
     ansible_user: "foo@fakemail.net"
     ansible_httpapi_password: "password"
     ansible_network_os: f5networks.f5_beacon.f5
