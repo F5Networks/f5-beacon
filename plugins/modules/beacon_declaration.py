@@ -57,19 +57,19 @@ class Parameters(AnsibleF5Parameters):
     ]
 
     returnables = [
-        'declaration',
+        'content',
     ]
 
 
 class ModuleParameters(Parameters):
     @property
-    def declaration(self):
-        if self._values['declaration'] is None:
+    def content(self):
+        if self._values['content'] is None:
             return None
-        if isinstance(self._values['declaration'], string_types):
-            return json.loads(self._values['declaration'] or 'null')
+        if isinstance(self._values['content'], string_types):
+            return json.loads(self._values['content'] or 'null')
         else:
-            return self._values['declaration']
+            return self._values['content']
 
 
 class Changes(Parameters):
@@ -196,7 +196,7 @@ class ModuleManager(object):
             "action": "deploy",
         }
         try:
-            payload.update(self.want.declaration)
+            payload.update(self.want.content)
         except ValueError:
             raise F5CollectionError(
                 "The provided 'declaration' could not be converted into valid json. If you "
@@ -214,7 +214,7 @@ class ModuleManager(object):
             "action": "remove",
         }
         try:
-            payload.update(self.want.declaration)
+            payload.update(self.want.content)
         except ValueError:
             raise F5CollectionError(
                 "The provided 'declaration' could not be converted into valid json. If you "

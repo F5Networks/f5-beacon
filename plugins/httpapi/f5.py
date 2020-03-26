@@ -108,7 +108,7 @@ class HttpApi(HttpApiBase):
         data = json.dumps(body) if body else None
 
         try:
-            self._display_request(method=method)
+            self._display_request(method=method, data=data)
             response, response_data = self.connection.send(url, data, method=method, **kwargs)
 
             response_value = self._get_response_value(response_data)
@@ -117,8 +117,10 @@ class HttpApi(HttpApiBase):
         except HTTPError as e:
             return dict(code=e.code, contents=json.loads(e.read()))
 
-    def _display_request(self, method):
-        self.connection.queue_message('vvvv', 'F5 Cloud Services API Call: %s %s' % (method, self.connection._url))
+    def _display_request(self, method, data):
+        self.connection._log_messages(
+            'F5 Cloud Services API Call: {0} {1} with data {2}'.format(method, self.connection._url, data)
+        )
 
     def _get_response_value(self, response_data):
         return to_text(response_data.getvalue())
@@ -148,19 +150,19 @@ class HttpApi(HttpApiBase):
         if account_id:
             headers = {'X-F5aaS-Preferred-Account-Id': account_id}
             headers.update(BASE_HEADERS)
-            return self.send_request(url, method='PATCH', headers=headers, **kwargs)
+            return self.send_request(url, method='PATCH', data=data, headers=headers, **kwargs)
         return self.send_request(url, method='PATCH', data=data, headers=BASE_HEADERS, **kwargs)
 
     def post(self, url, data=None, account_id=None, **kwargs):
         if account_id:
             headers = {'X-F5aaS-Preferred-Account-Id': account_id}
             headers.update(BASE_HEADERS)
-            return self.send_request(url, method='POST', headers=headers, **kwargs)
+            return self.send_request(url, method='POST', data=data, headers=headers, **kwargs)
         return self.send_request(url, method='POST', data=data, headers=BASE_HEADERS, **kwargs)
 
     def put(self, url, data=None, account_id=None, **kwargs):
         if account_id:
             headers = {'X-F5aaS-Preferred-Account-Id': account_id}
             headers.update(BASE_HEADERS)
-            return self.send_request(url, method='PUT', headers=headers, **kwargs)
+            return self.send_request(url, method='PUT', data=data, headers=headers, **kwargs)
         return self.send_request(url, method='PUT', data=data, headers=BASE_HEADERS, **kwargs)

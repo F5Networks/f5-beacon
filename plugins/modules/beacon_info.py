@@ -184,7 +184,7 @@ class BaseManager(object):
         self.module = kwargs.get('module', None)
         self.client = kwargs.get('client', None)
         self.kwargs = kwargs
-        self.preferred_account_id = kwargs.get('preferred_account_id', None)
+        self.preferred_account_id = self.module.params.get('preferred_account_id', None)
 
     def exec_module(self):
         results = []
