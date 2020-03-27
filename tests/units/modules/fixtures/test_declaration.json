@@ -1,0 +1,139 @@
+{
+  "declaration": [
+    {
+      "metadata": {
+        "version": "v1"
+      },
+      "application": {
+        "name": "Mobile_App",
+        "description": "Top Level of my Application",
+        "labels": {
+          "Environment": "Lab"
+        },
+        "dependencies": [
+          {
+            "name": "Static_Resources",
+            "description": "",
+            "labels": {},
+            "dependencies": [
+              {
+                "name": "CDN",
+                "description": "",
+                "labels": {},
+                "dependencies": [],
+                "healthSourceSettings": null,
+                "rollupHealthStatusId": 1
+              }
+            ],
+            "healthSourceSettings": null,
+            "rollupHealthStatusId": 1
+          },
+          {
+            "name": "DNS",
+            "description": "",
+            "labels": {},
+            "dependencies": [],
+            "healthSourceSettings": null,
+            "rollupHealthStatusId": 1
+          },
+          {
+            "name": "Release_Process",
+            "description": "",
+            "labels": {},
+            "dependencies": [
+              {
+                "name": "SCM",
+                "description": "",
+                "labels": {},
+                "dependencies": [],
+                "healthSourceSettings": null,
+                "rollupHealthStatusId": 1
+              }
+            ],
+            "healthSourceSettings": null,
+            "rollupHealthStatusId": 1
+          },
+          {
+            "name": "WAF",
+            "description": "",
+            "labels": {},
+            "dependencies": [
+              {
+                "name": "Gateway",
+                "description": "",
+                "labels": {},
+                "dependencies": [
+                  {
+                    "name": "Data_Service",
+                    "description": "",
+                    "labels": {},
+                    "dependencies": [
+                      {
+                        "name": "Data",
+                        "description": "",
+                        "labels": {},
+                        "dependencies": [],
+                        "healthSourceSettings": null,
+                        "rollupHealthStatusId": 1
+                      }
+                    ],
+                    "healthSourceSettings": null,
+                    "rollupHealthStatusId": 1
+                  },
+                  {
+                    "name": "Middleware_Service",
+                    "description": "",
+                    "labels": {},
+                    "dependencies": [
+                      {
+                        "name": "In_App_Purchase",
+                        "description": "",
+                        "labels": {},
+                        "dependencies": [],
+                        "healthSourceSettings": null,
+                        "rollupHealthStatusId": 1
+                      },
+                      {
+                        "name": "Payments",
+                        "description": "",
+                        "labels": {},
+                        "dependencies": [],
+                        "healthSourceSettings": null,
+                        "rollupHealthStatusId": 2
+                      }
+                    ],
+                    "healthSourceSettings": null,
+                    "rollupHealthStatusId": 2
+                  },
+                  {
+                    "name": "Worker_Service",
+                    "description": "",
+                    "labels": {},
+                    "dependencies": [
+                      {
+                        "name": "Reporting",
+                        "description": "",
+                        "labels": {},
+                        "dependencies": [],
+                        "healthSourceSettings": null,
+                        "rollupHealthStatusId": 1
+                      }
+                    ],
+                    "healthSourceSettings": null,
+                    "rollupHealthStatusId": 1
+                  }
+                ],
+                "healthSourceSettings": null,
+                "rollupHealthStatusId": 2
+              }
+            ],
+            "healthSourceSettings": null,
+            "rollupHealthStatusId": 2
+          }
+        ],
+        "healthSourceSettings": null,
+        "rollupHealthStatusId": 2
+      }
+    }
+  ]
+}

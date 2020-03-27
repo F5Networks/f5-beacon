@@ -20,6 +20,11 @@ description:
   - Manage Beacon declarations on F5 Cloud Services.
 version_added: "f5_beacon 1.0"
 options:
+  content:
+    description:
+      - Full declaration of the service.
+    type: raw
+    required: True
 extends_documentation_fragment: f5networks.f5_beacon.f5cs
 author:
   - Wojciech Wypior (@wojtek0806)
@@ -57,7 +62,7 @@ class Parameters(AnsibleF5Parameters):
     ]
 
     returnables = [
-        'content',
+        'content'
     ]
 
 
@@ -67,7 +72,8 @@ class ModuleParameters(Parameters):
         if self._values['content'] is None:
             return None
         if isinstance(self._values['content'], string_types):
-            return json.loads(self._values['content'] or 'null')
+            data = json.loads(self._values['content'] or 'null')
+            return data
         else:
             return self._values['content']
 
@@ -78,13 +84,13 @@ class Changes(Parameters):
         try:
             for returnable in self.returnables:
                 change = getattr(self, returnable)
-                if isinstance(change, dict):
+                if isinstance(change, dict) and 'declaration' not in change:
                     result.update(change)
                 else:
                     result[returnable] = change
             result = self._filter_params(result)
         except Exception:
-            pass
+            raise
         return result
 
 
@@ -142,8 +148,6 @@ class ModuleManager(object):
         if changed:
             self.changes = UsableChanges(params=changed)
 
-        return False
-
     def exec_module(self):
         changed = False
         result = dict()
@@ -174,6 +178,7 @@ class ModuleManager(object):
         return True
 
     def create(self):
+        self._set_changed_options()
         if self.module.check_mode:
             return True
         self.create_on_device()
