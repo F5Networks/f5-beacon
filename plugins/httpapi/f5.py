@@ -137,7 +137,7 @@ class HttpApi(HttpApiBase):
             headers = {'X-F5aaS-Preferred-Account-Id': account_id}
             headers.update(BASE_HEADERS)
             return self.send_request(url, method='DELETE', headers=headers, **kwargs)
-        return self.send_request(url, method='DELETE', **kwargs)
+        return self.send_request(url, method='DELETE', headers=BASE_HEADERS,  **kwargs)
 
     def get(self, url, account_id=None, **kwargs):
         if account_id:

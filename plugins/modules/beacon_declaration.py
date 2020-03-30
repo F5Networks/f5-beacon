@@ -23,6 +23,8 @@ options:
   content:
     description:
       - Full declaration of the service.
+      - The declaration must start with an B(declaration) array otherwise the operation will fail.
+      - The module as it is is not idempotent until the target API is fixed to provide means to do so.
     type: raw
     required: True
 extends_documentation_fragment: f5networks.f5_beacon.f5cs
@@ -89,8 +91,8 @@ class Changes(Parameters):
                 else:
                     result[returnable] = change
             result = self._filter_params(result)
-        except Exception:
-            raise
+        except Exception as ex:
+            raise F5CollectionError(str(ex))
         return result
 
 
