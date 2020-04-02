@@ -11,7 +11,7 @@ tags:
   - cloud
   - beacon
 dependencies: {}
-repository: http://example.com/repository
-documentation: http://docs.example.com
-homepage: http://example.com
-issues: http://example.com/issue/tracker
+repository: https://github.com/F5Networks/f5-beacon
+documentation: https://github.com/F5Networks/f5-beacon
+homepage: https://github.com/F5Networks/f5-beacon
+issues: https://github.com/F5Networks/f5-beacon/issues
