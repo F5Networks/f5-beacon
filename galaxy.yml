@@ -1,6 +1,6 @@
 namespace: f5networks
 name: f5_beacon
-version: 0.5.1-beta
+version: 0.5.2-beta
 readme: README.md
 authors:
   - Wojciech Wypior (@wojtek0806)

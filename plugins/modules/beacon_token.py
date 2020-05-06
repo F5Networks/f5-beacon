@@ -256,7 +256,7 @@ class ArgumentSpec(object):
         argument_spec = dict(
             name=dict(required=True),
             description=dict(),
-            preferred_account_id=dict(no_log=True),
+            preferred_account_id=dict(),
             state=dict(
                 default='present',
                 choices=['present', 'absent']

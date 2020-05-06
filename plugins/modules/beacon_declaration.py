@@ -240,7 +240,7 @@ class ArgumentSpec(object):
         self.supports_check_mode = True
         argument_spec = dict(
             content=dict(type='raw', required=True),
-            preferred_account_id=dict(no_log=True),
+            preferred_account_id=dict(),
             state=dict(
                 default='present',
                 choices=['present', 'absent']

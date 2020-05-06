@@ -404,7 +404,7 @@ class ArgumentSpec(object):
     def __init__(self):
         self.supports_check_mode = False
         argument_spec = dict(
-            preferred_account_id=dict(no_log=True),
+            preferred_account_id=dict(),
             gather_subset=dict(
                 type='list',
                 required=True,
